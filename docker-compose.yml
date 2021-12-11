@@ -1,0 +1,36 @@
+version: '3.9'
+services:
+  users_backends:
+    build: .
+    ports:
+      - "8000:3000"
+    volumes:
+      - .:/app
+    depends_on:
+      - users_database
+      - postgres
+
+  users_database:
+    image: mysql:8
+    restart: always
+    environment:
+      MYSQL_DATABASE: users
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - .dbdata:/var/lib/mysql
+
+  postgres:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: plumtree
+      POSTGRES_DB: microserviceDB
+      POSTGRES_USER: postgres
+    ports:
+      - "54322:5432"
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "8080:8080"

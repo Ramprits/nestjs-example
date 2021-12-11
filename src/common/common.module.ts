@@ -1,4 +1,7 @@
 import { Module } from '@nestjs/common';
+import { AbstractService } from "./abstract.service";
 
-@Module({})
+@Module({
+  providers: []
+})
 export class CommonModule {}

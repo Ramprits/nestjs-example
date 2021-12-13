@@ -1,26 +1,12 @@
-import { Injectable } from '@nestjs/common';
-import { CreateOrderItemDto } from './dto/create-order-item.dto';
-import { UpdateOrderItemDto } from './dto/update-order-item.dto';
+import { Injectable } from "@nestjs/common";
+import { Repository } from "typeorm";
+import { InjectRepository } from "@nestjs/typeorm";
+import { OrderItem } from "./entities/order-item.entity";
+import { AbstractService } from "../common/abstract.service";
 
 @Injectable()
-export class OrderItemService {
-  create(createOrderItemDto: CreateOrderItemDto) {
-    return 'This action adds a new orderItem';
-  }
-
-  findAll() {
-    return `This action returns all orderItem`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} orderItem`;
-  }
-
-  update(id: number, updateOrderItemDto: UpdateOrderItemDto) {
-    return `This action updates a #${id} orderItem`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} orderItem`;
+export class OrderItemService extends AbstractService {
+  constructor(@InjectRepository(OrderItem) private readonly orderItemRepository: Repository<OrderItem>) {
+    super(orderItemRepository);
   }
 }

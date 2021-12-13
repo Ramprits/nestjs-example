@@ -1,20 +1,15 @@
 import {
-  BaseEntity,
   Column,
-  CreateDateColumn,
   Entity, JoinTable,
-  ManyToMany,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn
+  ManyToMany
 } from "typeorm";
 import { Permission } from "../../permission/entities/permission.entity";
+import { CommonBaseEntity } from "../../shared/base-entity";
 
 @Entity("roles")
-export class Role extends BaseEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
+export class Role extends CommonBaseEntity {
 
-  @Column()
+  @Column({ type: "varchar" })
   name: string;
 
   @ManyToMany(() => Permission, { cascade: true, eager: true })
@@ -24,11 +19,5 @@ export class Role extends BaseEntity {
     inverseJoinColumn: { name: "permission_id", referencedColumnName: "id" }
   })
   permissions: Permission[];
-
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updateAt: Date;
 
 }

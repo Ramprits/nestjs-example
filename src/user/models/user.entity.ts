@@ -1,21 +1,17 @@
 import {
-  BaseEntity,
   BeforeInsert, BeforeUpdate,
   Column,
-  CreateDateColumn,
-  DeleteDateColumn,
-  Entity, JoinColumn, ManyToOne,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn
+  Entity, JoinColumn, ManyToOne, OneToMany
 } from "typeorm";
 import { hashSync } from "bcrypt";
 import { Exclude } from "class-transformer";
 import { Role } from "../../role/entities/role.entity";
+import { CommonBaseEntity } from "../../shared/base-entity";
+import { OrderItem } from "../../order-item/entities/order-item.entity";
+import { Order } from "../../order/entities/order.entity";
 
 @Entity({ name: "users" })
-export class UserEntity extends BaseEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
+export class UserEntity extends CommonBaseEntity {
 
   @Column({ type: "varchar", nullable: true })
   first_name: string;
@@ -30,18 +26,14 @@ export class UserEntity extends BaseEntity {
   @Exclude()
   password: string;
 
-  @DeleteDateColumn()
-  is_deleted: Date;
-
   @ManyToOne(() => Role)
   @JoinColumn({ name: "role_id" })
   role: Role;
 
-  @CreateDateColumn()
-  created_at: Date;
 
-  @UpdateDateColumn()
-  updated_at: Date;
+  @OneToMany(() => Order, u => u.user)
+  orders: Order[];
+
 
   @BeforeInsert()
   @BeforeUpdate()

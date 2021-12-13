@@ -6,30 +6,12 @@ import { CreateUserDto } from "./dto/create-user.dto";
 import { UserResponse } from "./interface/user-response";
 import { UsersResponse } from "./interface/users-response";
 import { PaginateResponse } from "./interface/paginate-response";
+import { AbstractService } from "../common/abstract.service";
 
 @Injectable()
-export class UserService {
+export class UserService extends AbstractService {
   constructor(@InjectRepository(UserEntity) private readonly userRepo: Repository<UserEntity>) {
-  }
-
-  async findAll(): Promise<UsersResponse> {
-    const users = await this.userRepo.find();
-    return { users };
-  }
-
-  async paginate(page: number): Promise<PaginateResponse> {
-    const take = 10;
-    const [users, total] = await this.userRepo.findAndCount({
-      take,
-      skip: (page - 1) * take
-    });
-    return {
-      data: users, meta: {
-        totalUsers: total,
-        page,
-        last_page: Math.ceil(total / take)
-      }
-    };
+    super(userRepo);
   }
 
   async create(createUser: CreateUserDto): Promise<UserResponse> {
@@ -37,5 +19,9 @@ export class UserService {
     Object.assign(user, createUser);
     const createdUser = await this.userRepo.save({ ...user, role: { id: createUser.role_id } });
     return { user: createdUser };
+  }
+
+  async findById(id: number): Promise<UserEntity> {
+    return this.userRepo.findOne({ id });
   }
 }
